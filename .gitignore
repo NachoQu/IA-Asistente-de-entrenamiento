@@ -1,3 +1,4 @@
 node_modules
 data/user-data.json
 .env
+.venv

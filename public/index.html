@@ -239,10 +239,32 @@
         <!-- Garmin -->
         <section id="view-garmin" class="view">
           <div class="card">
-            <h3>Importar datos de Garmin</h3>
-            <p class="help-text">Puedes importar tus actividades exportadas de Garmin Connect en formato JSON.</p>
+            <h3>Conexión directa a Garmin Connect</h3>
+            <p class="help-text">Conectate automáticamente para extraer tus entrenamientos.</p>
+            <form id="garmin-connect-form" class="data-form" style="margin-top: 0.75rem;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Email de Garmin Connect</label>
+                  <input type="email" id="garmin-email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                  <label>Contraseña</label>
+                  <input type="password" id="garmin-password" placeholder="Contraseña" required>
+                </div>
+                <div class="form-group">
+                  <label>Días para importar</label>
+                  <input type="number" id="garmin-days" value="30" min="1" max="365">
+                </div>
+              </div>
+              <button type="submit" class="btn-primary">🔄 Sincronizar con Garmin</button>
+            </form>
+            <div id="garmin-sync-status" style="margin-top: 0.75rem;"></div>
+          </div>
+          <div class="card">
+            <h3>Importar archivo manual</h3>
+            <p class="help-text">Alternativamente, arrastra un archivo JSON exportado de Garmin Connect.</p>
             <div class="import-area" id="garmin-dropzone">
-              <p>📁 Arrastra tu archivo JSON aquí o haz clic para seleccionar</p>
+              <p>📁 Arrastra el archivo JSON aquí o haz clic para seleccionar</p>
               <input type="file" id="garmin-file-input" accept=".json" style="display:none">
             </div>
             <div id="garmin-preview" style="display:none">
@@ -251,15 +273,6 @@
               <button id="garmin-import-btn" class="btn-primary">Importar actividades</button>
             </div>
             <div id="garmin-result"></div>
-          </div>
-          <div class="card">
-            <h3>Exportar datos de Garmin Connect</h3>
-            <ol class="help-steps">
-              <li>Inicia sesión en <a href="https://connect.garmin.com" target="_blank">Garmin Connect</a></li>
-              <li>Ve a "Actividades" y selecciona las que quieras exportar</li>
-              <li>Exporta como JSON (o CSV)</li>
-              <li>Arrastra el archivo aquí arriba</li>
-            </ol>
           </div>
         </section>
 

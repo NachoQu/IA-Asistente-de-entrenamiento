@@ -440,6 +440,40 @@
     }
   });
 
+  // ==================== GARMIN CONNECT SYNC ====================
+  $('#garmin-connect-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = $('#garmin-email').value.trim();
+    const password = $('#garmin-password').value;
+    const days = $('#garmin-days').value || 30;
+    const statusEl = $('#garmin-sync-status');
+    const btn = $('#garmin-connect-form').querySelector('button[type="submit"]');
+
+    statusEl.innerHTML = '<p style="color: var(--text-secondary)">⏳ Conectando con Garmin Connect...</p>';
+    btn.disabled = true;
+    btn.textContent = '⏳ Sincronizando...';
+
+    try {
+      const res = await fetch('/api/garmin/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, days: Number(days) }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        statusEl.innerHTML = `<p style="color: var(--success)">✓ ${result.count} actividades sincronizadas desde Garmin.</p>`;
+        await loadData();
+      } else {
+        statusEl.innerHTML = `<p style="color: var(--danger)">✗ Error: ${result.error}</p>`;
+      }
+    } catch (err) {
+      statusEl.innerHTML = `<p style="color: var(--danger)">✗ Error de conexión: ${err.message}</p>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔄 Sincronizar con Garmin';
+    }
+  });
+
   // ==================== SETTINGS ====================
   $('#settings-form').addEventListener('submit', e => {
     e.preventDefault();

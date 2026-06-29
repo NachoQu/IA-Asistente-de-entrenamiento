@@ -121,6 +121,44 @@ app.post('/api/import/garmin', (req, res) => {
   }
 });
 
+app.post('/api/garmin/sync', async (req, res) => {
+  const { email, password, days } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password required' });
+  }
+
+  const python = path.join(__dirname, '.venv', 'bin', 'python3');
+  const script = path.join(__dirname, 'garmin-sync.py');
+
+  const env = { ...process.env, GARMIN_EMAIL: email, GARMIN_PASSWORD: password, GARMIN_DAYS: String(days || 30) };
+
+  try {
+    const { execSync } = require('child_process');
+    const output = execSync(`"${python}" "${script}"`, { env, encoding: 'utf8', timeout: 60000 });
+    const result = JSON.parse(output);
+
+    if (result.error) {
+      return res.status(500).json({ error: result.error });
+    }
+
+    // Store activities
+    const data = loadData();
+    if (!data.workouts) data.workouts = [];
+    const imported = result.activities.map(a => ({
+      ...a,
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      source: 'garmin',
+      createdAt: new Date().toISOString(),
+    }));
+    data.workouts.push(...imported);
+    saveData(data);
+
+    res.json({ ok: true, count: imported.length });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Asistente de Entrenamiento corriendo en http://localhost:${PORT}`);
 });
