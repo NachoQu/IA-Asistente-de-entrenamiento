@@ -109,10 +109,6 @@ app.post('/api/import/garmin', (req, res) => {
   }
 });
 
-app.post('/api/garmin/sync', (req, res) => {
-  res.status(501).json({ error: 'Garmin sync requires Python + garminconnect library. Run locally with: npm start' });
-});
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
