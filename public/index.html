@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente de Entrenamiento IA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <h1>FitIA</h1>
+        <p class="subtitle">Asistente Personal</p>
+      </div>
+      <nav>
+        <a href="#" data-view="dashboard" class="active">
+          <span class="icon">📊</span> Dashboard
+        </a>
+        <a href="#" data-view="training">
+          <span class="icon">🏋️</span> Entrenamiento
+        </a>
+        <a href="#" data-view="nutrition">
+          <span class="icon">🥗</span> Nutrición
+        </a>
+        <a href="#" data-view="rest">
+          <span class="icon">😴</span> Descanso
+        </a>
+        <a href="#" data-view="chat">
+          <span class="icon">🤖</span> Asistente IA
+        </a>
+        <a href="#" data-view="garmin">
+          <span class="icon">⌚</span> Garmin
+        </a>
+        <a href="#" data-view="settings">
+          <span class="icon">⚙️</span> Configuración
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <p>Datos almacenados localmente</p>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <header id="topbar">
+        <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+        <h2 id="view-title">Dashboard</h2>
+        <div id="topbar-stats"></div>
+      </header>
+
+      <div id="content">
+        <!-- Dashboard -->
+        <section id="view-dashboard" class="view active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Entrenamientos (semana)</div>
+              <div class="stat-value" id="stat-workouts-week">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Horas de sueño (prom.)</div>
+              <div class="stat-value" id="stat-sleep-avg">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Calorías (prom. diario)</div>
+              <div class="stat-value" id="stat-calories-avg">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Racha activa</div>
+              <div class="stat-value" id="stat-streak">0 días</div>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <div class="card">
+              <h3>Últimos entrenamientos</h3>
+              <div id="recent-workouts"><p class="empty-state">No hay entrenamientos registrados</p></div>
+            </div>
+            <div class="card">
+              <h3>Sueño reciente</h3>
+              <div id="recent-sleep"><p class="empty-state">No hay datos de sueño</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Training -->
+        <section id="view-training" class="view">
+          <div class="view-header">
+            <h3>Registrar entrenamiento</h3>
+          </div>
+          <form id="workout-form" class="data-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" id="workout-date" required>
+              </div>
+              <div class="form-group">
+                <label>Tipo</label>
+                <select id="workout-type" required>
+                  <option value="cardio">Cardio</option>
+                  <option value="fuerza">Fuerza</option>
+                  <option value="crossfit">CrossFit / HIIT</option>
+                  <option value="yoga">Yoga / Flexibilidad</option>
+                  <option value="ciclismo">Ciclismo</option>
+                  <option value="natacion">Natación</option>
+                  <option value="caminata">Caminata</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Duración (min)</label>
+                <input type="number" id="workout-duration" min="1" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Distancia (km, opcional)</label>
+                <input type="number" id="workout-distance" step="0.01" min="0">
+              </div>
+              <div class="form-group">
+                <label>Calorías (opcional)</label>
+                <input type="number" id="workout-calories" min="0">
+              </div>
+              <div class="form-group">
+                <label>RPE (esfuerzo 1-10)</label>
+                <input type="number" id="workout-rpe" min="1" max="10">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Notas</label>
+              <textarea id="workout-notes" rows="2" placeholder="¿Cómo te sentiste? Detalles del entrenamiento..."></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Guardar entrenamiento</button>
+          </form>
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3>Historial de entrenamientos</h3>
+            <div id="workout-list"><p class="empty-state">No hay entrenamientos registrados</p></div>
+          </div>
+        </section>
+
+        <!-- Nutrition -->
+        <section id="view-nutrition" class="view">
+          <div class="view-header">
+            <h3>Registrar comida</h3>
+          </div>
+          <form id="meal-form" class="data-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" id="meal-date" required>
+              </div>
+              <div class="form-group">
+                <label>Comida</label>
+                <select id="meal-type">
+                  <option value="desayuno">Desayuno</option>
+                  <option value="almuerzo">Almuerzo</option>
+                  <option value="cena">Cena</option>
+                  <option value="snack">Snack</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Calorías</label>
+                <input type="number" id="meal-calories" min="0" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Proteínas (g)</label>
+                <input type="number" id="meal-protein" min="0" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Carbohidratos (g)</label>
+                <input type="number" id="meal-carbs" min="0" step="0.1">
+              </div>
+              <div class="form-group">
+                <label>Grasas (g)</label>
+                <input type="number" id="meal-fat" min="0" step="0.1">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <input type="text" id="meal-description" placeholder="¿Qué comiste?" >
+            </div>
+            <button type="submit" class="btn-primary">Guardar comida</button>
+          </form>
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3>Registro de comidas</h3>
+            <div id="meal-list"><p class="empty-state">No hay comidas registradas</p></div>
+          </div>
+        </section>
+
+        <!-- Rest -->
+        <section id="view-rest" class="view">
+          <div class="view-header">
+            <h3>Registrar sueño</h3>
+          </div>
+          <form id="sleep-form" class="data-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" id="sleep-date" required>
+              </div>
+              <div class="form-group">
+                <label>Horas de sueño</label>
+                <input type="number" id="sleep-hours" min="0" max="24" step="0.5" required>
+              </div>
+              <div class="form-group">
+                <label>Calidad (1-10)</label>
+                <input type="number" id="sleep-quality" min="1" max="10">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Notas</label>
+              <textarea id="sleep-notes" rows="2" placeholder="¿Cómo descansaste?"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Guardar sueño</button>
+          </form>
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3>Historial de sueño</h3>
+            <div id="sleep-list"><p class="empty-state">No hay datos de sueño</p></div>
+          </div>
+        </section>
+
+        <!-- Chat -->
+        <section id="view-chat" class="view">
+          <div id="chat-container">
+            <div id="chat-messages">
+              <div class="message ai">
+                <div class="message-content">
+                  ¡Hola! Soy tu asistente de entrenamiento. Puedo ayudarte a analizar tu progreso, darte recomendaciones de entrenamiento, nutrición y recuperación. ¿En qué puedo ayudarte?
+                </div>
+              </div>
+            </div>
+            <form id="chat-form">
+              <input type="text" id="chat-input" placeholder="Pregúntale a tu asistente..." autocomplete="off">
+              <button type="submit" id="chat-send">Enviar</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Garmin -->
+        <section id="view-garmin" class="view">
+          <div class="card">
+            <h3>Importar datos de Garmin</h3>
+            <p class="help-text">Puedes importar tus actividades exportadas de Garmin Connect en formato JSON.</p>
+            <div class="import-area" id="garmin-dropzone">
+              <p>📁 Arrastra tu archivo JSON aquí o haz clic para seleccionar</p>
+              <input type="file" id="garmin-file-input" accept=".json" style="display:none">
+            </div>
+            <div id="garmin-preview" style="display:none">
+              <h4>Vista previa</h4>
+              <div id="garmin-activities-count"></div>
+              <button id="garmin-import-btn" class="btn-primary">Importar actividades</button>
+            </div>
+            <div id="garmin-result"></div>
+          </div>
+          <div class="card">
+            <h3>Exportar datos de Garmin Connect</h3>
+            <ol class="help-steps">
+              <li>Inicia sesión en <a href="https://connect.garmin.com" target="_blank">Garmin Connect</a></li>
+              <li>Ve a "Actividades" y selecciona las que quieras exportar</li>
+              <li>Exporta como JSON (o CSV)</li>
+              <li>Arrastra el archivo aquí arriba</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="view-settings" class="view">
+          <div class="card">
+            <h3>Configuración de API</h3>
+            <form id="settings-form">
+              <div class="form-group">
+                <label>API Key (Vercel AI Gateway)</label>
+                <input type="password" id="settings-api-key" placeholder="Tu API key de Vercel AI Gateway">
+              </div>
+              <div class="form-group">
+                <label>Base URL</label>
+                <input type="url" id="settings-base-url" value="https://ai-gateway.vercel.sh/v1">
+              </div>
+              <div class="form-group">
+                <label>Modelo</label>
+                <select id="settings-model">
+                  <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+                  <option value="openai/gpt-4.1-mini">GPT-4.1 Mini</option>
+                  <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
+                  <option value="google/gemini-2.0-flash">Gemini 2.0 Flash</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Prompt del sistema</label>
+                <textarea id="settings-system-prompt" rows="4">Eres un asistente experto en entrenamiento físico, nutrición y descanso. Ayudas al usuario a analizar su progreso y dar recomendaciones personalizadas. Responde en español, sé conciso y práctico.</textarea>
+              </div>
+              <button type="submit" class="btn-primary">Guardar configuración</button>
+            </form>
+            <p class="help-text" style="margin-top: 0.75rem;">💡 Vercel requiere una tarjeta de crédito para desbloquear los créditos gratis ($5/mes). Agrega una en <a href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dadd-credit-card" target="_blank">vercel.com</a></p>
+          </div>
+          <div class="card">
+            <h3>Datos</h3>
+            <button id="export-data-btn" class="btn-secondary">Exportar todos los datos</button>
+            <button id="clear-data-btn" class="btn-danger">Borrar todos los datos</button>
+            <p id="data-file-info" class="help-text" style="margin-top: 0.5rem;">Los datos se guardan automáticamente en el servidor.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

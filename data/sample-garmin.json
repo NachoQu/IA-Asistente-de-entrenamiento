@@ -1,0 +1,30 @@
+{
+  "activities": [
+    {
+      "date": "2026-06-28",
+      "type": "running",
+      "duration": 45,
+      "distance": 8.2,
+      "calories": 520,
+      "avgHeartRate": 148,
+      "notes": "Trote matutino, sensación buena"
+    },
+    {
+      "date": "2026-06-27",
+      "type": "cycling",
+      "duration": 75,
+      "distance": 25.3,
+      "calories": 680,
+      "avgHeartRate": 135,
+      "notes": "Ruta por la costa"
+    },
+    {
+      "date": "2026-06-26",
+      "type": "strength",
+      "duration": 60,
+      "calories": 380,
+      "avgHeartRate": 120,
+      "notes": "Upper body + core"
+    }
+  ]
+}

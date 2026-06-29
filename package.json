@@ -1,0 +1,13 @@
+{
+  "name": "asistente-entrenamiento",
+  "version": "1.0.0",
+  "description": "Asistente IA de entrenamiento, nutrición y descanso",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --dev"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
