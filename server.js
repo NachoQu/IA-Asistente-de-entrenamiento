@@ -2,6 +2,15 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
+// Load .env
+try {
+  const envFile = fs.readFileSync(path.join(__dirname, '.env'), 'utf8');
+  envFile.split('\n').forEach(line => {
+    const [key, ...vals] = line.split('=');
+    if (key && vals.length) process.env[key.trim()] = vals.join('=').trim();
+  });
+} catch (e) {}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'user-data.json');
@@ -54,7 +63,7 @@ app.delete('/api/data/:collection/:id', (req, res) => {
 
 app.post('/api/ai', async (req, res) => {
   const { message, context } = req.body;
-  const apiKey = req.headers['x-api-key'] || process.env.VERCEL_AI_KEY;
+  const apiKey = req.headers['x-api-key'] || process.env.OPENROUTER_KEY;
   const baseUrl = req.headers['x-api-base-url'] || 'https://openrouter.ai/api/v1';
 
   try {
