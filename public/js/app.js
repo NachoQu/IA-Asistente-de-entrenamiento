@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  let data = { workouts: [], meals: [], sleep: [], measurements: [], chatHistory: [] };
+  let data = { workouts: [], meals: [], sleep: [], measurements: [], daily_stats: [], chatHistory: [] };
   let prevChatLen = 0;
 
   const $ = s => document.querySelector(s);
@@ -28,7 +28,7 @@
       if (target) target.classList.add('active');
       const titles = { dashboard: 'Dashboard', training: 'Entrenamiento',
         nutrition: 'Nutrición', rest: 'Descanso', chat: 'Asistente IA',
-        garmin: 'Importar Garmin', settings: 'Configuración' };
+        garmin: 'Importar Garmin', health: 'Salud', settings: 'Configuración' };
       $('#view-title').textContent = titles[view] || view;
     });
   });
@@ -56,6 +56,7 @@
         data.meals = data.meals || [];
         data.sleep = data.sleep || [];
         data.measurements = data.measurements || [];
+        data.daily_stats = data.daily_stats || [];
         data.chatHistory = data.chatHistory || [];
       }
     } catch (e) { console.error('Error loading data:', e); }
@@ -445,11 +446,12 @@
     e.preventDefault();
     const email = $('#garmin-email').value.trim();
     const password = $('#garmin-password').value;
-    const days = $('#garmin-days').value || 30;
+    const startDate = $('#garmin-start-date').value || undefined;
+    const days = $('#garmin-days').value || undefined;
     const statusEl = $('#garmin-sync-status');
     const btn = $('#garmin-connect-form').querySelector('button[type="submit"]');
 
-    statusEl.innerHTML = '<p style="color: var(--text-secondary)">⏳ Conectando con Garmin Connect...</p>';
+    statusEl.innerHTML = '<p style="color: var(--text-secondary)">⏳ Conectando con Garmin Connect. Esto puede tomar varios minutos si es todo el historial...</p>';
     btn.disabled = true;
     btn.textContent = '⏳ Sincronizando...';
 
@@ -457,11 +459,15 @@
       const res = await fetch('/api/garmin/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, days: Number(days) }),
+        body: JSON.stringify({ email, password, startDate, days: days ? Number(days) : undefined }),
       });
       const result = await res.json();
       if (result.ok) {
-        statusEl.innerHTML = `<p style="color: var(--success)">✓ ${result.count} actividades sincronizadas desde Garmin.</p>`;
+        statusEl.innerHTML = `<p style="color: var(--success)">✓ Sincronización completa</p>
+          <p style="font-size:0.85rem;color:var(--text-secondary)">
+            ${result.summary.activities} actividades · ${result.summary.days_with_data} días con datos · ${result.summary.body_measurements} mediciones
+            <br>Nuevas actividades importadas: ${result.imported_activities}
+          </p>`;
         await loadData();
       } else {
         statusEl.innerHTML = `<p style="color: var(--danger)">✗ Error: ${result.error}</p>`;
@@ -522,12 +528,63 @@
     }
   });
 
+  // ==================== HEALTH ====================
+  function renderHealth() {
+    const stats = data.daily_stats || [];
+
+    if (stats.length === 0) {
+      $('#health-hrv').textContent = '—';
+      $('#health-bb').textContent = '—';
+      $('#health-stress').textContent = '—';
+      $('#health-rhr').textContent = '—';
+      $('#health-list').innerHTML = '<p class="empty-state">Sincronizá con Garmin para ver tus métricas de salud.</p>';
+      return;
+    }
+
+    const recent = stats.slice(-30);
+    const hrvVals = recent.filter(d => d.hrv_avg != null).map(d => d.hrv_avg);
+    const bbMaxVals = recent.filter(d => d.body_battery_max != null).map(d => d.body_battery_max);
+    const stressVals = recent.filter(d => d.stress_avg != null).map(d => d.stress_avg);
+    const rhrVals = recent.filter(d => d.rhr != null).map(d => d.rhr);
+
+    const avg = arr => arr.length ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : null;
+
+    $('#health-hrv').textContent = avg(hrvVals) ? avg(hrvVals) + ' ms' : '—';
+    $('#health-bb').textContent = avg(bbMaxVals) ? avg(bbMaxVals) + '%' : '—';
+    $('#health-stress').textContent = avg(stressVals) ? avg(stressVals) + '' : '—';
+    $('#health-rhr').textContent = avg(rhrVals) ? avg(rhrVals) + ' bpm' : '—';
+
+    // List
+    const sorted = [...stats].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 60);
+    $('#health-list').innerHTML = '<div class="item-list">' + sorted.map(d =>
+      `<div class="list-item">
+        <div class="item-info">
+          <div class="item-title">${d.date}</div>
+          <div class="item-detail">
+            ${d.steps ? d.steps + ' pasos' : ''}
+            ${d.sleep_hours ? ' · Sueño: ' + d.sleep_hours + 'h' : ''}
+            ${d.hrv_avg ? ' · HRV: ' + d.hrv_avg + ' ms' : ''}
+            ${d.body_battery_max != null ? ' · BB: ' + d.body_battery_max + '%' : ''}
+            ${d.stress_avg != null ? ' · Estrés: ' + d.stress_avg : ''}
+            ${d.rhr ? ' · FC repo: ' + d.rhr + ' bpm' : ''}
+            ${d.hr_resting ? ' · FC repo: ' + d.hr_resting + ' bpm' : ''}
+            ${d.spo2_avg ? ' · SpO2: ' + d.spo2_avg + '%' : ''}
+            ${d.respiration_avg ? ' · Resp: ' + d.respiration_avg : ''}
+            ${d.training_status ? ' · Status: ' + d.training_status : ''}
+            ${d.vo2_max ? ' · VO2max: ' + d.vo2_max : ''}
+          </div>
+        </div>
+      </div>`
+    ).join('') + '</div>';
+  }
+
   // ==================== RENDER ALL ====================
   function renderAll() {
     renderDashboard();
     renderWorkouts();
     renderMeals();
     renderSleep();
+    renderHealth();
   }
 
   // Set default dates

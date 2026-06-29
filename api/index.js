@@ -14,7 +14,7 @@ function loadData() {
       return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     }
   } catch (e) { console.error('Error loading data:', e); }
-  return { workouts: [], meals: [], sleep: [], measurements: [], chatHistory: [] };
+  return { workouts: [], meals: [], sleep: [], measurements: [], daily_stats: [], chatHistory: [] };
 }
 
 function saveData(data) {
