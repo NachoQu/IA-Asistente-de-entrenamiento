@@ -55,7 +55,7 @@ app.delete('/api/data/:collection/:id', (req, res) => {
 app.post('/api/ai', async (req, res) => {
   const { message, context } = req.body;
   const apiKey = req.headers['x-api-key'] || process.env.VERCEL_AI_KEY;
-  const baseUrl = req.headers['x-api-base-url'] || 'https://ai-gateway.vercel.sh/v1';
+  const baseUrl = req.headers['x-api-base-url'] || 'https://openrouter.ai/api/v1';
 
   try {
     const response = await fetch(`${baseUrl}/chat/completions`, {
@@ -63,9 +63,11 @@ app.post('/api/ai', async (req, res) => {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/NachoQu/IA-Asistente-de-entrenamiento',
+        'X-Title': 'FitIA - Asistente de Entrenamiento',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o-mini',
+        model: req.body.model || 'openai/gpt-4o-mini',
         messages: [
           {
             role: 'system',

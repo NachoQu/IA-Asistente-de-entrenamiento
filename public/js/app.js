@@ -461,7 +461,7 @@
       try {
         const s = JSON.parse(saved);
         $('#settings-api-key').value = s.apiKey || '';
-        $('#settings-base-url').value = s.baseUrl || 'https://ai-gateway.vercel.sh/v1';
+        $('#settings-base-url').value = s.baseUrl || 'https://openrouter.ai/api/v1';
         if (s.model) $('#settings-model').value = s.model;
         if (s.systemPrompt) $('#settings-system-prompt').value = s.systemPrompt;
       } catch(e) {}

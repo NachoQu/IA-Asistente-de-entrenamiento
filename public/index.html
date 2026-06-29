@@ -270,19 +270,21 @@
             <form id="settings-form">
               <div class="form-group">
                 <label>API Key (Vercel AI Gateway)</label>
-                <input type="password" id="settings-api-key" placeholder="Tu API key de Vercel AI Gateway">
+                <input type="password" id="settings-api-key" placeholder="sk-or-v1-...">
               </div>
               <div class="form-group">
                 <label>Base URL</label>
-                <input type="url" id="settings-base-url" value="https://ai-gateway.vercel.sh/v1">
+                <input type="url" id="settings-base-url" value="https://openrouter.ai/api/v1">
               </div>
               <div class="form-group">
                 <label>Modelo</label>
                 <select id="settings-model">
-                  <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
-                  <option value="openai/gpt-4.1-mini">GPT-4.1 Mini</option>
-                  <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
-                  <option value="google/gemini-2.0-flash">Gemini 2.0 Flash</option>
+                  <option value="openai/gpt-4o-mini">GPT-4o Mini (gratis)</option>
+                  <option value="anthropic/claude-3-haiku">Claude 3 Haiku (gratis)</option>
+                  <option value="google/gemini-2.0-flash">Gemini 2.0 Flash (gratis)</option>
+                  <option value="meta-llama/llama-3.2-3b-instruct">Llama 3.2 3B (gratis)</option>
+                  <option value="mistral/mistral-7b-instruct">Mistral 7B (gratis)</option>
+                  <option value="qwen/qwen-2.5-7b-instruct">Qwen 2.5 7B (gratis)</option>
                 </select>
               </div>
               <div class="form-group">
@@ -291,7 +293,7 @@
               </div>
               <button type="submit" class="btn-primary">Guardar configuración</button>
             </form>
-            <p class="help-text" style="margin-top: 0.75rem;">💡 Vercel requiere una tarjeta de crédito para desbloquear los créditos gratis ($5/mes). Agrega una en <a href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dadd-credit-card" target="_blank">vercel.com</a></p>
+            <p class="help-text" style="margin-top: 0.75rem;">💡 OpenRouter tiene modelos gratuitos. Los créditos gratis se renuevan mensualmente.</p>
           </div>
           <div class="card">
             <h3>Datos</h3>

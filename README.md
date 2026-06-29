@@ -14,7 +14,7 @@ Asistente personal de entrenamiento, nutrición y descanso con inteligencia arti
 ## Requisitos
 
 - Node.js 18+
-- API Key de [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) (necesita tarjeta de crédito para créditos gratis de $5/mes)
+- API Key de [OpenRouter](https://openrouter.ai) (modelos gratuitos disponibles)
 
 ## Instalación
 
